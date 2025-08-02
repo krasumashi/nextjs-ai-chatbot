@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
+import { useState } from 'react';
 
 import { ModelSelector } from '@/components/model-selector';
 import { SidebarToggle } from '@/components/sidebar-toggle';
@@ -12,6 +13,8 @@ import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
+import { SecretDropModal } from './secret-drop-modal';
+import { Shield } from 'lucide-react';
 import type { Session } from 'next-auth';
 
 function PureChatHeader({
@@ -29,6 +32,7 @@ function PureChatHeader({
 }) {
   const router = useRouter();
   const { open } = useSidebar();
+  const [secretDropOpen, setSecretDropOpen] = useState(false);
 
   const { width: windowWidth } = useWindowSize();
 
@@ -63,6 +67,16 @@ function PureChatHeader({
         />
       )}
 
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setSecretDropOpen(true)}
+        className="flex items-center gap-2 hover:bg-primary/10 order-3"
+      >
+        <Shield className="h-4 w-4" />
+        <span className="hidden md:inline">Secret</span>
+      </Button>
+
       {!isReadonly && (
         <VisibilitySelector
           chatId={chatId}
@@ -83,6 +97,11 @@ function PureChatHeader({
           Deploy with Vercel
         </Link>
       </Button>
+
+      <SecretDropModal 
+        open={secretDropOpen}
+        onOpenChange={setSecretDropOpen}
+      />
     </header>
   );
 }
