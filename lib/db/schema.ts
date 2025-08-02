@@ -168,3 +168,17 @@ export const stream = pgTable(
 );
 
 export type Stream = InferSelectModel<typeof stream>;
+// SecretDrop: Self-destructing messages
+export const secretMessage = pgTable('SecretMessage', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  token: varchar('token', { length: 32 }).notNull().unique(),
+  content: text('content').notNull(),
+  fileName: text('fileName'),
+  fileContent: text('fileContent'),
+  viewed: boolean('viewed').notNull().default(false),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  viewedAt: timestamp('viewedAt'),
+  expiresAt: timestamp('expiresAt').notNull(),
+});
+
+export type SecretMessage = InferSelectModel<typeof secretMessage>;
